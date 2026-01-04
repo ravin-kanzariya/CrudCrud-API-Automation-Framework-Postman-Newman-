@@ -1,0 +1,284 @@
+{
+	"info": {
+		"_postman_id": "57191226-70eb-4152-8020-0bb7d9a8811b",
+		"name": "CrudCrud",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "21941862",
+		"_collection_link": "https://api-automation-learners.postman.co/workspace/Practice~e3ca7bf2-1c57-4288-83d3-7c22951351c8/collection/21941862-57191226-70eb-4152-8020-0bb7d9a8811b?action=share&source=collection_link&creator=21941862"
+	},
+	"item": [
+		{
+			"name": "Create resource",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", () => {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"const res = pm.response.json();",
+							"",
+							"pm.test(\"Response has _id\", () => {",
+							"    pm.expect(res._id).to.exist;",
+							"});",
+							"",
+							"pm.environment.set(\"resourceId\", res._id);",
+							"",
+							"pm.test(\"deviceName is correct\", () => {",
+							"    pm.expect(res.deviceName).to.eql(\"Smart Camera\");",
+							"});",
+							"",
+							"pm.test(\"status is valid\", () => {",
+							"    pm.expect([\"online\",\"offline\"]).to.include(res.status);",
+							"});",
+							"",
+							"pm.test(\"Response time < 2s\", () => {",
+							"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"deviceName\": \"Smart Camera\",\n  \"location\": \"Warehouse A\",\n  \"status\": \"online\"\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/{{token}}/{{resource}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"{{token}}",
+						"{{resource}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Resources",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status 200\", () => {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"const list = pm.response.json();",
+							"",
+							"pm.test(\"Response is array\", () => {",
+							"    pm.expect(list).to.be.an(\"array\");",
+							"});",
+							"",
+							"pm.test(\"At least one record exists\", () => {",
+							"    pm.expect(list.length).to.be.greaterThan(0);",
+							"});",
+							"",
+							"pm.test(\"Each record has _id\", () => {",
+							"    list.forEach(item => {",
+							"        pm.expect(item._id).to.exist;",
+							"    });",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/api/{{token}}/{{resource}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"{{token}}",
+						"{{resource}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Single Resource",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status 200\", () => {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"const obj = pm.response.json();",
+							"",
+							"pm.test(\"Correct record fetched\", () => {",
+							"    pm.expect(obj._id).to.eql(pm.environment.get(\"resourceId\"));",
+							"});",
+							"",
+							"pm.test(\"deviceName exists\", () => {",
+							"    pm.expect(obj.deviceName).to.exist;",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/api/{{token}}/{{resource}}/{{resourceId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"{{token}}",
+						"{{resource}}",
+						"{{resourceId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Resource",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status 200\", () => {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"deviceName\": \"Smart Camera\",\n  \"location\": \"Warehouse A\",\n  \"status\": \"offline\"\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/{{token}}/{{resource}}/{{resourceId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"{{token}}",
+						"{{resource}}",
+						"{{resourceId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Resources",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Deleted successfully\", () => {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/api/{{token}}/{{resource}}/{{resourceId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"{{token}}",
+						"{{resource}}",
+						"{{resourceId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Verify Deletion",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Record does not exist\", () => {",
+							"    pm.response.to.have.status(404);",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/api/{{token}}/{{resource}}/{{resourceId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"{{token}}",
+						"{{resource}}",
+						"{{resourceId}}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

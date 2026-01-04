@@ -1,0 +1,1944 @@
+{
+  "collection": {
+    "_": {
+      "postman_id": "57191226-70eb-4152-8020-0bb7d9a8811b",
+      "exporter_id": "21941862",
+      "collection_link": "https://api-automation-learners.postman.co/workspace/Practice~e3ca7bf2-1c57-4288-83d3-7c22951351c8/collection/21941862-57191226-70eb-4152-8020-0bb7d9a8811b?action=share&source=collection_link&creator=21941862"
+    },
+    "item": [
+      {
+        "id": "bf89e537-5cbb-44b5-bf02-bdf189157105",
+        "name": "Create resource",
+        "request": {
+          "url": {
+            "path": [
+              "api",
+              "{{token}}",
+              "{{resource}}"
+            ],
+            "host": [
+              "{{baseUrl}}"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "method": "POST",
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"deviceName\": \"Smart Camera\",\n  \"location\": \"Warehouse A\",\n  \"status\": \"online\"\n}\n",
+            "options": {
+              "raw": {
+                "language": "json"
+              }
+            }
+          }
+        },
+        "response": [],
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "id": "e4421d6f-eae3-41e2-8414-40fd802c9a2b",
+              "type": "text/javascript",
+              "packages": {},
+              "exec": [
+                "pm.test(\"Status code is 201\", () => {",
+                "    pm.response.to.have.status(201);",
+                "});",
+                "",
+                "const res = pm.response.json();",
+                "",
+                "pm.test(\"Response has _id\", () => {",
+                "    pm.expect(res._id).to.exist;",
+                "});",
+                "",
+                "pm.environment.set(\"resourceId\", res._id);",
+                "",
+                "pm.test(\"deviceName is correct\", () => {",
+                "    pm.expect(res.deviceName).to.eql(\"Smart Camera\");",
+                "});",
+                "",
+                "pm.test(\"status is valid\", () => {",
+                "    pm.expect([\"online\",\"offline\"]).to.include(res.status);",
+                "});",
+                "",
+                "pm.test(\"Response time < 2s\", () => {",
+                "    pm.expect(pm.response.responseTime).to.be.below(2000);",
+                "});",
+                ""
+              ],
+              "_lastExecutionId": "a3fdb595-a8f1-4a31-b1b8-5d9999eb5581"
+            }
+          }
+        ]
+      },
+      {
+        "id": "aa1fc103-4271-4bd5-93ea-fe33bcf952f8",
+        "name": "Get All Resources",
+        "request": {
+          "url": {
+            "path": [
+              "api",
+              "{{token}}",
+              "{{resource}}"
+            ],
+            "host": [
+              "{{baseUrl}}"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "method": "GET"
+        },
+        "response": [],
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "id": "33e3ac46-0de1-43f4-8387-c2d556d643f0",
+              "type": "text/javascript",
+              "packages": {},
+              "exec": [
+                "pm.test(\"Status 200\", () => {",
+                "    pm.response.to.have.status(200);",
+                "});",
+                "",
+                "const list = pm.response.json();",
+                "",
+                "pm.test(\"Response is array\", () => {",
+                "    pm.expect(list).to.be.an(\"array\");",
+                "});",
+                "",
+                "pm.test(\"At least one record exists\", () => {",
+                "    pm.expect(list.length).to.be.greaterThan(0);",
+                "});",
+                "",
+                "pm.test(\"Each record has _id\", () => {",
+                "    list.forEach(item => {",
+                "        pm.expect(item._id).to.exist;",
+                "    });",
+                "});",
+                ""
+              ],
+              "_lastExecutionId": "08ff868a-fe66-4495-9ea9-3b96973c6c7a"
+            }
+          }
+        ]
+      },
+      {
+        "id": "bdd3468d-fb19-4e6e-b795-c97644464b5e",
+        "name": "Get Single Resource",
+        "request": {
+          "url": {
+            "path": [
+              "api",
+              "{{token}}",
+              "{{resource}}",
+              "{{resourceId}}"
+            ],
+            "host": [
+              "{{baseUrl}}"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "method": "GET"
+        },
+        "response": [],
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "id": "cdb49328-5275-4432-bf67-3a636c3b90ee",
+              "type": "text/javascript",
+              "packages": {},
+              "exec": [
+                "pm.test(\"Status 200\", () => {",
+                "    pm.response.to.have.status(200);",
+                "});",
+                "",
+                "const obj = pm.response.json();",
+                "",
+                "pm.test(\"Correct record fetched\", () => {",
+                "    pm.expect(obj._id).to.eql(pm.environment.get(\"resourceId\"));",
+                "});",
+                "",
+                "pm.test(\"deviceName exists\", () => {",
+                "    pm.expect(obj.deviceName).to.exist;",
+                "});",
+                ""
+              ],
+              "_lastExecutionId": "ab778e73-a858-4155-a267-7c3858bf7d72"
+            }
+          }
+        ]
+      },
+      {
+        "id": "a4b4d010-75e9-439b-a417-23cd8c31c0ff",
+        "name": "Update Resource",
+        "request": {
+          "url": {
+            "path": [
+              "api",
+              "{{token}}",
+              "{{resource}}",
+              "{{resourceId}}"
+            ],
+            "host": [
+              "{{baseUrl}}"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "method": "PUT",
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"deviceName\": \"Smart Camera\",\n  \"location\": \"Warehouse A\",\n  \"status\": \"offline\"\n}\n",
+            "options": {
+              "raw": {
+                "language": "json"
+              }
+            }
+          }
+        },
+        "response": [],
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "id": "7b48ba00-c58b-4b91-9480-072d187ac105",
+              "type": "text/javascript",
+              "packages": {},
+              "exec": [
+                "pm.test(\"Status 200\", () => {",
+                "    pm.response.to.have.status(200);",
+                "});",
+                "",
+                ""
+              ],
+              "_lastExecutionId": "cf61edb2-cc05-4ce2-afbd-e404d79331a9"
+            }
+          }
+        ]
+      },
+      {
+        "id": "e28d0584-ea62-4995-b3cf-26afd1dd4084",
+        "name": "Delete Resources",
+        "request": {
+          "url": {
+            "path": [
+              "api",
+              "{{token}}",
+              "{{resource}}",
+              "{{resourceId}}"
+            ],
+            "host": [
+              "{{baseUrl}}"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "method": "DELETE"
+        },
+        "response": [],
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "id": "779f20ac-df1d-43ea-83c3-e25517ed2477",
+              "type": "text/javascript",
+              "packages": {},
+              "exec": [
+                "pm.test(\"Deleted successfully\", () => {",
+                "    pm.response.to.have.status(200);",
+                "});",
+                ""
+              ],
+              "_lastExecutionId": "c639945a-c348-4241-a654-67d93121062d"
+            }
+          }
+        ]
+      },
+      {
+        "id": "ce8d4c05-e2c6-428b-938a-bb8a9064e3af",
+        "name": "Verify Deletion",
+        "request": {
+          "url": {
+            "path": [
+              "api",
+              "{{token}}",
+              "{{resource}}",
+              "{{resourceId}}"
+            ],
+            "host": [
+              "{{baseUrl}}"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "method": "GET"
+        },
+        "response": [],
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "id": "96396f9c-92f9-4f2f-9035-8b77f3f75d9c",
+              "type": "text/javascript",
+              "packages": {},
+              "exec": [
+                "pm.test(\"Record does not exist\", () => {",
+                "    pm.response.to.have.status(404);",
+                "});",
+                ""
+              ],
+              "_lastExecutionId": "4801964f-fa30-4ba6-a1e1-bceebabe0d71"
+            }
+          }
+        ]
+      }
+    ],
+    "event": [],
+    "variable": [],
+    "info": {
+      "_postman_id": "57191226-70eb-4152-8020-0bb7d9a8811b",
+      "name": "CrudCrud",
+      "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    }
+  },
+  "environment": {
+    "_": {
+      "postman_variable_scope": "environment",
+      "postman_exported_at": "2026-01-04T18:40:57.319Z",
+      "postman_exported_using": "Postman/10.24.27"
+    },
+    "id": "394c8ee7-6270-4d60-8147-d373a61b09f9",
+    "name": "qa",
+    "values": [
+      {
+        "type": "any",
+        "value": "https://crudcrud.com",
+        "key": "baseUrl"
+      },
+      {
+        "type": "any",
+        "value": "1fd617886c564d46ae2cbcfd047ffee8",
+        "key": "token"
+      },
+      {
+        "type": "any",
+        "value": "devices",
+        "key": "resource"
+      },
+      {
+        "type": "any",
+        "value": "695ab816d19be803e8acd0c3",
+        "key": "resourceId"
+      }
+    ]
+  },
+  "globals": {
+    "id": "0fdcba28-883d-4313-9347-c05cdc7ecb61",
+    "values": []
+  },
+  "run": {
+    "stats": {
+      "iterations": {
+        "total": 1,
+        "pending": 0,
+        "failed": 0
+      },
+      "items": {
+        "total": 6,
+        "pending": 0,
+        "failed": 0
+      },
+      "scripts": {
+        "total": 6,
+        "pending": 0,
+        "failed": 0
+      },
+      "prerequests": {
+        "total": 6,
+        "pending": 0,
+        "failed": 0
+      },
+      "requests": {
+        "total": 6,
+        "pending": 0,
+        "failed": 0
+      },
+      "tests": {
+        "total": 6,
+        "pending": 0,
+        "failed": 0
+      },
+      "assertions": {
+        "total": 15,
+        "pending": 0,
+        "failed": 0
+      },
+      "testScripts": {
+        "total": 6,
+        "pending": 0,
+        "failed": 0
+      },
+      "prerequestScripts": {
+        "total": 0,
+        "pending": 0,
+        "failed": 0
+      }
+    },
+    "timings": {
+      "responseAverage": 496.1666666666667,
+      "responseMin": 196,
+      "responseMax": 1300,
+      "responseSd": 365.77334360077265,
+      "dnsAverage": 0,
+      "dnsMin": 0,
+      "dnsMax": 0,
+      "dnsSd": 0,
+      "firstByteAverage": 0,
+      "firstByteMin": 0,
+      "firstByteMax": 0,
+      "firstByteSd": 0,
+      "started": 1767553045601,
+      "completed": 1767553048731
+    },
+    "executions": [
+      {
+        "cursor": {
+          "position": 0,
+          "iteration": 0,
+          "length": 6,
+          "cycles": 1,
+          "empty": false,
+          "eof": false,
+          "bof": true,
+          "cr": false,
+          "ref": "46320df5-30aa-4c73-98f5-e8cc549a90db",
+          "httpRequestId": "9c40d570-76d9-4901-a609-261927547025"
+        },
+        "item": {
+          "id": "bf89e537-5cbb-44b5-bf02-bdf189157105",
+          "name": "Create resource",
+          "request": {
+            "url": {
+              "path": [
+                "api",
+                "{{token}}",
+                "{{resource}}"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"deviceName\": \"Smart Camera\",\n  \"location\": \"Warehouse A\",\n  \"status\": \"online\"\n}\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "e4421d6f-eae3-41e2-8414-40fd802c9a2b",
+                "type": "text/javascript",
+                "packages": {},
+                "exec": [
+                  "pm.test(\"Status code is 201\", () => {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "const res = pm.response.json();",
+                  "",
+                  "pm.test(\"Response has _id\", () => {",
+                  "    pm.expect(res._id).to.exist;",
+                  "});",
+                  "",
+                  "pm.environment.set(\"resourceId\", res._id);",
+                  "",
+                  "pm.test(\"deviceName is correct\", () => {",
+                  "    pm.expect(res.deviceName).to.eql(\"Smart Camera\");",
+                  "});",
+                  "",
+                  "pm.test(\"status is valid\", () => {",
+                  "    pm.expect([\"online\",\"offline\"]).to.include(res.status);",
+                  "});",
+                  "",
+                  "pm.test(\"Response time < 2s\", () => {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);",
+                  "});",
+                  ""
+                ],
+                "_lastExecutionId": "a3fdb595-a8f1-4a31-b1b8-5d9999eb5581"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "https",
+            "path": [
+              "api",
+              "1fd617886c564d46ae2cbcfd047ffee8",
+              "devices"
+            ],
+            "host": [
+              "crudcrud",
+              "com"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json",
+              "system": true
+            },
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.37.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "0e3af47c-2d31-4d46-b2cf-551a9411b913",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "crudcrud.com",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            },
+            {
+              "key": "Content-Length",
+              "value": "86",
+              "system": true
+            }
+          ],
+          "method": "POST",
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"deviceName\": \"Smart Camera\",\n  \"location\": \"Warehouse A\",\n  \"status\": \"online\"\n}\n",
+            "options": {
+              "raw": {
+                "language": "json"
+              }
+            }
+          }
+        },
+        "response": {
+          "id": "11bdd8c4-0d85-45db-bdf8-32f2a569842a",
+          "status": "Created",
+          "code": 201,
+          "header": [
+            {
+              "key": "Server",
+              "value": "nginx/1.14.2"
+            },
+            {
+              "key": "Date",
+              "value": "Sun, 04 Jan 2026 18:57:26 GMT"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Location",
+              "value": "/api/1fd617886c564d46ae2cbcfd047ffee8/devices/695ab816d19be803e8acd0c3"
+            },
+            {
+              "key": "Access-Control-Allow-Origin",
+              "value": "*"
+            },
+            {
+              "key": "Access-Control-Allow-Methods",
+              "value": "GET, POST, PUT, DELETE, OPTIONS"
+            },
+            {
+              "key": "Access-Control-Allow-Headers",
+              "value": "DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range"
+            },
+            {
+              "key": "Access-Control-Expose-Headers",
+              "value": "Content-Length,Content-Range"
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              123,
+              34,
+              100,
+              101,
+              118,
+              105,
+              99,
+              101,
+              78,
+              97,
+              109,
+              101,
+              34,
+              58,
+              34,
+              83,
+              109,
+              97,
+              114,
+              116,
+              32,
+              67,
+              97,
+              109,
+              101,
+              114,
+              97,
+              34,
+              44,
+              34,
+              108,
+              111,
+              99,
+              97,
+              116,
+              105,
+              111,
+              110,
+              34,
+              58,
+              34,
+              87,
+              97,
+              114,
+              101,
+              104,
+              111,
+              117,
+              115,
+              101,
+              32,
+              65,
+              34,
+              44,
+              34,
+              115,
+              116,
+              97,
+              116,
+              117,
+              115,
+              34,
+              58,
+              34,
+              111,
+              110,
+              108,
+              105,
+              110,
+              101,
+              34,
+              44,
+              34,
+              95,
+              105,
+              100,
+              34,
+              58,
+              34,
+              54,
+              57,
+              53,
+              97,
+              98,
+              56,
+              49,
+              54,
+              100,
+              49,
+              57,
+              98,
+              101,
+              56,
+              48,
+              51,
+              101,
+              56,
+              97,
+              99,
+              100,
+              48,
+              99,
+              51,
+              34,
+              125
+            ]
+          },
+          "cookie": [],
+          "responseTime": 1300,
+          "responseSize": 105
+        },
+        "id": "bf89e537-5cbb-44b5-bf02-bdf189157105",
+        "assertions": [
+          {
+            "assertion": "Status code is 201",
+            "skipped": false
+          },
+          {
+            "assertion": "Response has _id",
+            "skipped": false
+          },
+          {
+            "assertion": "deviceName is correct",
+            "skipped": false
+          },
+          {
+            "assertion": "status is valid",
+            "skipped": false
+          },
+          {
+            "assertion": "Response time < 2s",
+            "skipped": false
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "0e5b25d5-4aee-436a-90e9-f0f6a0694cd1",
+          "length": 6,
+          "cycles": 1,
+          "position": 1,
+          "iteration": 0,
+          "httpRequestId": "fe48aaa7-0fd8-4e67-a4e5-14881f03a83f"
+        },
+        "item": {
+          "id": "aa1fc103-4271-4bd5-93ea-fe33bcf952f8",
+          "name": "Get All Resources",
+          "request": {
+            "url": {
+              "path": [
+                "api",
+                "{{token}}",
+                "{{resource}}"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "method": "GET"
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "33e3ac46-0de1-43f4-8387-c2d556d643f0",
+                "type": "text/javascript",
+                "packages": {},
+                "exec": [
+                  "pm.test(\"Status 200\", () => {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "const list = pm.response.json();",
+                  "",
+                  "pm.test(\"Response is array\", () => {",
+                  "    pm.expect(list).to.be.an(\"array\");",
+                  "});",
+                  "",
+                  "pm.test(\"At least one record exists\", () => {",
+                  "    pm.expect(list.length).to.be.greaterThan(0);",
+                  "});",
+                  "",
+                  "pm.test(\"Each record has _id\", () => {",
+                  "    list.forEach(item => {",
+                  "        pm.expect(item._id).to.exist;",
+                  "    });",
+                  "});",
+                  ""
+                ],
+                "_lastExecutionId": "08ff868a-fe66-4495-9ea9-3b96973c6c7a"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "https",
+            "path": [
+              "api",
+              "1fd617886c564d46ae2cbcfd047ffee8",
+              "devices"
+            ],
+            "host": [
+              "crudcrud",
+              "com"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.37.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "3e57ae51-cc2d-41aa-973e-f414754ce9d7",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "crudcrud.com",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            }
+          ],
+          "method": "GET"
+        },
+        "response": {
+          "id": "8db8cd75-762c-4ac8-9341-8f6b856a9fa4",
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Server",
+              "value": "nginx/1.14.2"
+            },
+            {
+              "key": "Date",
+              "value": "Sun, 04 Jan 2026 18:57:27 GMT"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Access-Control-Allow-Origin",
+              "value": "*"
+            },
+            {
+              "key": "Access-Control-Allow-Methods",
+              "value": "GET, POST, PUT, DELETE, OPTIONS"
+            },
+            {
+              "key": "Access-Control-Allow-Headers",
+              "value": "DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range"
+            },
+            {
+              "key": "Access-Control-Expose-Headers",
+              "value": "Content-Length,Content-Range"
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              91,
+              123,
+              34,
+              95,
+              105,
+              100,
+              34,
+              58,
+              34,
+              54,
+              57,
+              53,
+              97,
+              98,
+              56,
+              49,
+              54,
+              100,
+              49,
+              57,
+              98,
+              101,
+              56,
+              48,
+              51,
+              101,
+              56,
+              97,
+              99,
+              100,
+              48,
+              99,
+              51,
+              34,
+              44,
+              34,
+              100,
+              101,
+              118,
+              105,
+              99,
+              101,
+              78,
+              97,
+              109,
+              101,
+              34,
+              58,
+              34,
+              83,
+              109,
+              97,
+              114,
+              116,
+              32,
+              67,
+              97,
+              109,
+              101,
+              114,
+              97,
+              34,
+              44,
+              34,
+              108,
+              111,
+              99,
+              97,
+              116,
+              105,
+              111,
+              110,
+              34,
+              58,
+              34,
+              87,
+              97,
+              114,
+              101,
+              104,
+              111,
+              117,
+              115,
+              101,
+              32,
+              65,
+              34,
+              44,
+              34,
+              115,
+              116,
+              97,
+              116,
+              117,
+              115,
+              34,
+              58,
+              34,
+              111,
+              110,
+              108,
+              105,
+              110,
+              101,
+              34,
+              125,
+              93
+            ]
+          },
+          "cookie": [],
+          "responseTime": 323,
+          "responseSize": 107
+        },
+        "id": "aa1fc103-4271-4bd5-93ea-fe33bcf952f8",
+        "assertions": [
+          {
+            "assertion": "Status 200",
+            "skipped": false
+          },
+          {
+            "assertion": "Response is array",
+            "skipped": false
+          },
+          {
+            "assertion": "At least one record exists",
+            "skipped": false
+          },
+          {
+            "assertion": "Each record has _id",
+            "skipped": false
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "cd8277ab-6ce0-4814-a8e2-94e39f78327a",
+          "length": 6,
+          "cycles": 1,
+          "position": 2,
+          "iteration": 0,
+          "httpRequestId": "a910d352-c09d-4006-a35d-6db59b1e4b8a"
+        },
+        "item": {
+          "id": "bdd3468d-fb19-4e6e-b795-c97644464b5e",
+          "name": "Get Single Resource",
+          "request": {
+            "url": {
+              "path": [
+                "api",
+                "{{token}}",
+                "{{resource}}",
+                "{{resourceId}}"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "method": "GET"
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "cdb49328-5275-4432-bf67-3a636c3b90ee",
+                "type": "text/javascript",
+                "packages": {},
+                "exec": [
+                  "pm.test(\"Status 200\", () => {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "const obj = pm.response.json();",
+                  "",
+                  "pm.test(\"Correct record fetched\", () => {",
+                  "    pm.expect(obj._id).to.eql(pm.environment.get(\"resourceId\"));",
+                  "});",
+                  "",
+                  "pm.test(\"deviceName exists\", () => {",
+                  "    pm.expect(obj.deviceName).to.exist;",
+                  "});",
+                  ""
+                ],
+                "_lastExecutionId": "ab778e73-a858-4155-a267-7c3858bf7d72"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "https",
+            "path": [
+              "api",
+              "1fd617886c564d46ae2cbcfd047ffee8",
+              "devices",
+              "695ab816d19be803e8acd0c3"
+            ],
+            "host": [
+              "crudcrud",
+              "com"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.37.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "19bddca3-2577-4ae1-a0e4-4a68a2b8cf67",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "crudcrud.com",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            }
+          ],
+          "method": "GET"
+        },
+        "response": {
+          "id": "a15bf0e2-336a-47bb-afe1-0464d29b3af8",
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Server",
+              "value": "nginx/1.14.2"
+            },
+            {
+              "key": "Date",
+              "value": "Sun, 04 Jan 2026 18:57:27 GMT"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Access-Control-Allow-Origin",
+              "value": "*"
+            },
+            {
+              "key": "Access-Control-Allow-Methods",
+              "value": "GET, POST, PUT, DELETE, OPTIONS"
+            },
+            {
+              "key": "Access-Control-Allow-Headers",
+              "value": "DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range"
+            },
+            {
+              "key": "Access-Control-Expose-Headers",
+              "value": "Content-Length,Content-Range"
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              123,
+              34,
+              95,
+              105,
+              100,
+              34,
+              58,
+              34,
+              54,
+              57,
+              53,
+              97,
+              98,
+              56,
+              49,
+              54,
+              100,
+              49,
+              57,
+              98,
+              101,
+              56,
+              48,
+              51,
+              101,
+              56,
+              97,
+              99,
+              100,
+              48,
+              99,
+              51,
+              34,
+              44,
+              34,
+              100,
+              101,
+              118,
+              105,
+              99,
+              101,
+              78,
+              97,
+              109,
+              101,
+              34,
+              58,
+              34,
+              83,
+              109,
+              97,
+              114,
+              116,
+              32,
+              67,
+              97,
+              109,
+              101,
+              114,
+              97,
+              34,
+              44,
+              34,
+              108,
+              111,
+              99,
+              97,
+              116,
+              105,
+              111,
+              110,
+              34,
+              58,
+              34,
+              87,
+              97,
+              114,
+              101,
+              104,
+              111,
+              117,
+              115,
+              101,
+              32,
+              65,
+              34,
+              44,
+              34,
+              115,
+              116,
+              97,
+              116,
+              117,
+              115,
+              34,
+              58,
+              34,
+              111,
+              110,
+              108,
+              105,
+              110,
+              101,
+              34,
+              125
+            ]
+          },
+          "cookie": [],
+          "responseTime": 196,
+          "responseSize": 105
+        },
+        "id": "bdd3468d-fb19-4e6e-b795-c97644464b5e",
+        "assertions": [
+          {
+            "assertion": "Status 200",
+            "skipped": false
+          },
+          {
+            "assertion": "Correct record fetched",
+            "skipped": false
+          },
+          {
+            "assertion": "deviceName exists",
+            "skipped": false
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "19139d55-e87d-4ef9-a30d-5e75ecc625cc",
+          "length": 6,
+          "cycles": 1,
+          "position": 3,
+          "iteration": 0,
+          "httpRequestId": "02e754bb-0f82-4f8c-96cf-05cdd6e76ecd"
+        },
+        "item": {
+          "id": "a4b4d010-75e9-439b-a417-23cd8c31c0ff",
+          "name": "Update Resource",
+          "request": {
+            "url": {
+              "path": [
+                "api",
+                "{{token}}",
+                "{{resource}}",
+                "{{resourceId}}"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "method": "PUT",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"deviceName\": \"Smart Camera\",\n  \"location\": \"Warehouse A\",\n  \"status\": \"offline\"\n}\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "7b48ba00-c58b-4b91-9480-072d187ac105",
+                "type": "text/javascript",
+                "packages": {},
+                "exec": [
+                  "pm.test(\"Status 200\", () => {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  ""
+                ],
+                "_lastExecutionId": "cf61edb2-cc05-4ce2-afbd-e404d79331a9"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "https",
+            "path": [
+              "api",
+              "1fd617886c564d46ae2cbcfd047ffee8",
+              "devices",
+              "695ab816d19be803e8acd0c3"
+            ],
+            "host": [
+              "crudcrud",
+              "com"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json",
+              "system": true
+            },
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.37.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "8cec1877-1ac6-4af9-9e73-63af5fabb538",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "crudcrud.com",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            },
+            {
+              "key": "Content-Length",
+              "value": "87",
+              "system": true
+            }
+          ],
+          "method": "PUT",
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"deviceName\": \"Smart Camera\",\n  \"location\": \"Warehouse A\",\n  \"status\": \"offline\"\n}\n",
+            "options": {
+              "raw": {
+                "language": "json"
+              }
+            }
+          }
+        },
+        "response": {
+          "id": "b26f76ee-0ed3-4c02-b59a-65d4624a64ea",
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Server",
+              "value": "nginx/1.14.2"
+            },
+            {
+              "key": "Date",
+              "value": "Sun, 04 Jan 2026 18:57:27 GMT"
+            },
+            {
+              "key": "Content-Length",
+              "value": "0"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Access-Control-Allow-Origin",
+              "value": "*"
+            },
+            {
+              "key": "Access-Control-Allow-Methods",
+              "value": "GET, POST, PUT, DELETE, OPTIONS"
+            },
+            {
+              "key": "Access-Control-Allow-Headers",
+              "value": "DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range"
+            },
+            {
+              "key": "Access-Control-Expose-Headers",
+              "value": "Content-Length,Content-Range"
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": []
+          },
+          "cookie": [],
+          "responseTime": 378,
+          "responseSize": 0
+        },
+        "id": "a4b4d010-75e9-439b-a417-23cd8c31c0ff",
+        "assertions": [
+          {
+            "assertion": "Status 200",
+            "skipped": false
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "749e0f9d-812f-4488-826d-2b38671a2bd2",
+          "length": 6,
+          "cycles": 1,
+          "position": 4,
+          "iteration": 0,
+          "httpRequestId": "c4c2529a-7516-4f7b-af90-ef0acf31d95d"
+        },
+        "item": {
+          "id": "e28d0584-ea62-4995-b3cf-26afd1dd4084",
+          "name": "Delete Resources",
+          "request": {
+            "url": {
+              "path": [
+                "api",
+                "{{token}}",
+                "{{resource}}",
+                "{{resourceId}}"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "method": "DELETE"
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "779f20ac-df1d-43ea-83c3-e25517ed2477",
+                "type": "text/javascript",
+                "packages": {},
+                "exec": [
+                  "pm.test(\"Deleted successfully\", () => {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  ""
+                ],
+                "_lastExecutionId": "c639945a-c348-4241-a654-67d93121062d"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "https",
+            "path": [
+              "api",
+              "1fd617886c564d46ae2cbcfd047ffee8",
+              "devices",
+              "695ab816d19be803e8acd0c3"
+            ],
+            "host": [
+              "crudcrud",
+              "com"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.37.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "ab9e9aea-6bf8-43a2-8261-b5c96b453b53",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "crudcrud.com",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            }
+          ],
+          "method": "DELETE"
+        },
+        "response": {
+          "id": "a662a2aa-c610-407f-a7a2-a6a5b3aad4d8",
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Server",
+              "value": "nginx/1.14.2"
+            },
+            {
+              "key": "Date",
+              "value": "Sun, 04 Jan 2026 18:57:28 GMT"
+            },
+            {
+              "key": "Content-Length",
+              "value": "0"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Access-Control-Allow-Origin",
+              "value": "*"
+            },
+            {
+              "key": "Access-Control-Allow-Methods",
+              "value": "GET, POST, PUT, DELETE, OPTIONS"
+            },
+            {
+              "key": "Access-Control-Allow-Headers",
+              "value": "DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range"
+            },
+            {
+              "key": "Access-Control-Expose-Headers",
+              "value": "Content-Length,Content-Range"
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": []
+          },
+          "cookie": [],
+          "responseTime": 390,
+          "responseSize": 0
+        },
+        "id": "e28d0584-ea62-4995-b3cf-26afd1dd4084",
+        "assertions": [
+          {
+            "assertion": "Deleted successfully",
+            "skipped": false
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "1a5bafd4-78da-444b-b1e7-559ffeb8bfa4",
+          "length": 6,
+          "cycles": 1,
+          "position": 5,
+          "iteration": 0,
+          "httpRequestId": "d7cdf59b-d0f1-42c5-a15e-b872147205bf"
+        },
+        "item": {
+          "id": "ce8d4c05-e2c6-428b-938a-bb8a9064e3af",
+          "name": "Verify Deletion",
+          "request": {
+            "url": {
+              "path": [
+                "api",
+                "{{token}}",
+                "{{resource}}",
+                "{{resourceId}}"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "method": "GET"
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "96396f9c-92f9-4f2f-9035-8b77f3f75d9c",
+                "type": "text/javascript",
+                "packages": {},
+                "exec": [
+                  "pm.test(\"Record does not exist\", () => {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  ""
+                ],
+                "_lastExecutionId": "4801964f-fa30-4ba6-a1e1-bceebabe0d71"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "https",
+            "path": [
+              "api",
+              "1fd617886c564d46ae2cbcfd047ffee8",
+              "devices",
+              "695ab816d19be803e8acd0c3"
+            ],
+            "host": [
+              "crudcrud",
+              "com"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.37.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "7a052faa-d062-4fed-87a2-6bac9bb34ea0",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "crudcrud.com",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            }
+          ],
+          "method": "GET"
+        },
+        "response": {
+          "id": "f7e538d9-0849-4242-8586-64d29d9d4573",
+          "status": "Not Found",
+          "code": 404,
+          "header": [
+            {
+              "key": "Server",
+              "value": "nginx/1.14.2"
+            },
+            {
+              "key": "Date",
+              "value": "Sun, 04 Jan 2026 18:57:28 GMT"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/problem+json; charset=utf-8"
+            },
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              123,
+              34,
+              116,
+              121,
+              112,
+              101,
+              34,
+              58,
+              34,
+              104,
+              116,
+              116,
+              112,
+              115,
+              58,
+              47,
+              47,
+              116,
+              111,
+              111,
+              108,
+              115,
+              46,
+              105,
+              101,
+              116,
+              102,
+              46,
+              111,
+              114,
+              103,
+              47,
+              104,
+              116,
+              109,
+              108,
+              47,
+              114,
+              102,
+              99,
+              55,
+              50,
+              51,
+              49,
+              35,
+              115,
+              101,
+              99,
+              116,
+              105,
+              111,
+              110,
+              45,
+              54,
+              46,
+              53,
+              46,
+              52,
+              34,
+              44,
+              34,
+              116,
+              105,
+              116,
+              108,
+              101,
+              34,
+              58,
+              34,
+              78,
+              111,
+              116,
+              32,
+              70,
+              111,
+              117,
+              110,
+              100,
+              34,
+              44,
+              34,
+              115,
+              116,
+              97,
+              116,
+              117,
+              115,
+              34,
+              58,
+              52,
+              48,
+              52,
+              44,
+              34,
+              116,
+              114,
+              97,
+              99,
+              101,
+              73,
+              100,
+              34,
+              58,
+              34,
+              48,
+              72,
+              78,
+              73,
+              50,
+              70,
+              68,
+              68,
+              56,
+              73,
+              49,
+              70,
+              55,
+              58,
+              48,
+              48,
+              48,
+              48,
+              48,
+              48,
+              48,
+              49,
+              34,
+              125
+            ]
+          },
+          "cookie": [],
+          "responseTime": 390,
+          "responseSize": 128
+        },
+        "id": "ce8d4c05-e2c6-428b-938a-bb8a9064e3af",
+        "assertions": [
+          {
+            "assertion": "Record does not exist",
+            "skipped": false
+          }
+        ]
+      }
+    ],
+    "transfers": {
+      "responseTotal": 445
+    },
+    "failures": [],
+    "error": null
+  }
+}
